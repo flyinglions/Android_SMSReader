@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SMSReader</title>
+</head>
+<body>
+		<!-- Button -->
+          <input disabled id="listsms" type="button" value="List Inbox Contents"  />
+          <hr>
+
+        <h1>INBOX</h1>
+        <div id="inbox"></div>
+        <hr>
+        
+<script type="text/javascript" charset="utf-8" src="cordova-1.7.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="smsread.js"></script>
+<script type="text/javascript">
+document.addEventListener('deviceready', function() {
+	   var btn = document.getElementById("listsms");
+	   btn.onclick = function() {
+		   window.plugins.SMSReader.getInbox("",
+			function(data){
+			      var text = getData(data);
+			      console.log(text);
+			      document.getElementById("inbox").innerHTML = text;
+			      
+			},
+			function(e){
+				console.log(e);
+			});
+	    }
+	    btn.disabled=false;
+	  }, false);
+
+
+
+function getData(data){
+   var txt = "";
+  for(var i = 0; i < data.messages.length; i++){
+          txt += "<b>Number:</b>" +  data.messages[i].number + " ";
+          txt += "<b> Message:</b>" + data.messages[i].text + "!<br />";
+  }
+  
+  return txt;
+}
+</script>
+
+</body>
+
+</html>
