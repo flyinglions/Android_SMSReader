@@ -66,51 +66,12 @@ public class SMSReader extends Plugin {
             sms.put("number",cur.getString(2));
             sms.put("text",cur.getString(11));
 
-            /*String name = getContact(cur.getString(2));
-            if(!name.equals("")){
-                sms.put("name",name);
-            }*/
             smsList.put(sms);
         }
         return data;
     }
 
-    private String getContact(String number){
-        Cursor cur = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,null,null,null,null);
-        String returnName= "";
-        if(cur.getCount() > 0){
-            while(cur.moveToNext()){
-                  String id =  cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                  Log.d("Contact","ID:" + id );
-                  String name =  cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                   Log.d("Contact","name:" + name);
-                  if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                      Cursor pcur = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,
-                              ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",new String[]{number},null);
-                      int numindex = pcur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
-                      if(pcur.moveToFirst()){
-                          String dbNum = pcur.getString(numindex);
-                          if(dbNum.equals(number)){
-                           returnName = name;
-                          Log.d("number","number:" + dbNum);
-                          }
-                          else {
-                              Log.d("number","numbers dont match!");
-                          }
-                      }
-                      else {
-                          Log.d("number", "no result");
-                      }
-
-                  }
-                    else {
-                       Log.d("number", "No Number");
-                  }
-            }
-        }
-        return returnName;
-    }
-
+   
     private ContentResolver getContentResolver(){
        return this.ctx.getContentResolver();
     }
