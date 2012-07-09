@@ -6,21 +6,24 @@
 <body>
 		<!-- Button -->
           <input disabled id="listsms" type="button" value="List Inbox Contents"  />
+          </br>
+          <input disabled id="decode" type="button" value="Decode first sms"  />
           <hr>
 
         <h1>INBOX</h1>
         <div id="inbox"></div>
-        <hr>
+        
         
 <script type="text/javascript" charset="utf-8" src="cordova-1.7.0.js"></script>
 <script type="text/javascript" charset="utf-8" src="smsread.js"></script>
 <script type="text/javascript">
 document.addEventListener('deviceready', function() {
-	   var btn = document.getElementById("listsms");
-	   btn.onclick = function() {
+	   var btnList = document.getElementById("listsms");
+	   var btnDecode = document.getElementById("decode");
+	   btnList.onclick = function() {
 		   window.plugins.SMSReader.getInbox("",
 			function(data){
-			      var text = getData(data);
+			      var text = getSMSData(data);
 			      console.log(text);
 			      document.getElementById("inbox").innerHTML = text;
 			      
@@ -29,20 +32,51 @@ document.addEventListener('deviceready', function() {
 				console.log(e);
 			});
 	    }
-	    btn.disabled=false;
+	   
+	   btnDecode.onclick = function() {
+		   window.plugins.SMSReader.getInbox("",
+			function(data){
+			      var text = getDecodeData(data);
+			      console.log(text);
+			      
+			      alert(text);
+			      
+			},
+			function(e){
+				console.log(e);
+			});
+	    }
+	   
+	   
+	   btnList.disabled=false;
+	   btnDecode.disabled=false;
 	  }, false);
+	  
+  
 
 
 
-function getData(data){
+function getSMSData(data){
    var txt = "";
   for(var i = 0; i < data.messages.length; i++){
-          txt += "<b>Number:</b>" +  data.messages[i].number + " ";
-          txt += "<b> Message:</b>" + data.messages[i].text + "!<br />";
+          txt += "<b>Number:</b>" +  data.messages[i].number + "<br />";
+          txt += "<b> Message:</b>" + data.messages[i].text + "<hr><br />";
   }
   
   return txt;
 }
+
+function getDecodeData(data){
+	   var txt = "";
+	   txt += "Bank: " +  data.messages[0].bank + "\n";
+	   txt += "Account: " + data.messages[0].account + "\n";
+	   txt += "Date: " + data.messages[0].date + "\n";
+	   txt += "Amount: " + data.messages[0].amount + "\n";
+	   txt += "Balance: " + data.messages[0].balance + "\n";
+	          
+	    
+	  return txt;
+	}
 </script>
 
 </body>
